@@ -2,7 +2,7 @@
     {
         "id": 1,
         "name": "foo",
-        "city": "surat",
+        "city": "dallas",
         "category": "one",
         "type": "A",
         "active": "FALSE"
@@ -13,8 +13,7 @@
         "city": "dallas",
         "category": "three",
         "type": "B",
-        "active": "FALSE",
-        "landmark": "sfsd"
+        "active": "FALSE"
     },
     {
         "id": 3,
@@ -22,9 +21,7 @@
         "city": "san francisco",
         "category": "one",
         "type": "B",
-        "active": "TRUE",
-        "landmark": "in id 3",
-        "test": "hello world"
+        "active": "TRUE"
     },
     {
         "id": 4,
@@ -32,7 +29,6 @@
         "city": "denver",
         "category": "two",
         "type": "C",
-        "active": "FALSE",
-        "landmark": "mota bhai"
+        "active": "FALSE"
     }
 ]

@@ -4,26 +4,27 @@ import { Form, CustomInput } from "reactstrap";
 import db from "../db.json";
 
 const Main = () => {
-  const [state, setState] = useState();
-  let data = db;
+  const [data, setData] = useState();
+  const [filtered, setFiltered] = useState();
+  const [filterOptions, setFilter] = useState({});
   let keys = [];
-  data.forEach((val) => {
-    Object.keys(val).filter((v, i, ar) => {
-      if (ar.indexOf(v) === i) {
-        keys.push(v);
-      }
+
+  if (data) {
+    data.forEach((val) => {
+      Object.keys(val).filter((v, i, ar) => {
+        if (ar.indexOf(v) === i) {
+          keys.push(v);
+        }
+      });
     });
-  });
+  }
 
   keys = keys.filter((v, i, ar) => ar.indexOf(v) === i);
 
-  let obj = state;
+  let obj;
   keys.forEach((val, ind) => {
     let tmp = [];
     db.forEach((dVal) => {
-      // let set = [...new Set(dVal[val])];
-      // console.log(`set`, set);
-      // obj.push(dVal[val]);
       tmp.push(dVal[val]);
       obj = {
         ...obj,
@@ -32,84 +33,183 @@ const Main = () => {
     });
   });
 
-  let check = [];
-  let filtered;
+  let filter = filterOptions;
 
-  const handleCheckChange = (e) => {
+  /* const handleCheckChange = (e) => {
     const { name, value, checked } = e.target;
-    console.log(`value`, value, `name`, name);
+
     if (checked) {
-      check.push({ [name]: value });
-    } else {
-      check = check.filter((v) => Object.values(v)[0] !== value);
-    }
-    console.log(`check`, check);
-    let tmp;
-    Object.values(check).forEach((v) => {
-      if (filtered) {
-        tmp = filtered.filter((vls, i) => vls[name] === v[name]);
+      if (Object.keys(filter).length !== 0) {
+        if (!filter[name]) {
+          filter = {
+            ...filter,
+            [name]: [value],
+          };
+        } else {
+          filter[name].push(value);
+        }
       } else {
-        tmp = db.filter((vls, i) => vls[name] === v[name]);
+        filter = {
+          [name]: [value],
+        };
       }
-      console.log(`tmp`, tmp);
-    });
-    filtered = tmp;
-    console.log(`filtered`, filtered);
-    // console.log(
-    //   `tmp filter`,
-    //   tmp.filter((v, i) => v[name] === value)
-    // );
-  };
-  const handleSearchChange = (e) => {
+    } else {
+      filter = {
+        ...filter,
+        [name]: filter[name].filter((v) => v !== value),
+      };
+
+      if (filter[name].length === 0) {
+        delete filter[name];
+      }
+    }
+
+    let filteredData = applyFilter(data, filter);
+    // let filteredData;
+
+    // console.log(`filter`, filter, data);
+
+    // if (!filtered) {
+    //   filteredData = applyFilter(data, filter);
+    // } else {
+    //   filteredData = applyFilter(filtered, filter);
+    // }
+    setFilter(filter);
+    setFiltered(filteredData);
+  }; */
+
+  /* const handleSearchChange = (e) => {
     const { name, value } = e.target;
     console.log(`value`, value, `name`);
-    let tt = db.filter((v, i) => v[name] === value);
-    console.log(`tt`, tt);
+    let fltr = {
+      [name]: [value],
+    };
+    let tt;
+    // console.log(`tt`, tt);
+
+    // console.log(`fltr`, fltr);
+    if (!filtered) {
+      tt = data.filter((v) => v[name].includes(value));
+      // tt = applyFilter(data, fltr);
+      // console.log(`tt in if`, tt);
+    } else {
+      // console.log(`else`);
+      tt = data.filter((v) => v[name].includes(value));
+      // tt = applyFilter(filtered, fltr);
+      // console.log(`tt in else`, tt);
+    }
+
+    console.log(`tt before set`, tt);
+    // console.log(`tt`, tt);
+    // let tt = applyFilter(data, fltr);
+    setFiltered(tt);
+
+    // setFiltered(...filtered, tt);
+  }; */
+
+  const handleFilter = (e) => {
+    const { name, value, checked } = e.target;
+    if (Object.keys(filter).length !== 0) {
+      if (!filter[name]) {
+        filter = {
+          ...filter,
+          [name]: [value],
+        };
+        console.log(`IF IF`);
+      } else {
+        filter[name].push(value);
+        console.log(`ELSE IF`);
+      }
+    } else {
+      filter = {
+        [name]: [value],
+      };
+      console.log(`ELSE`, filter);
+    }
+    if (!checked || value === "") {
+      filter = {
+        ...filter,
+        [name]: filter[name].filter((v) => v !== value),
+      };
+
+      if (filter[name].length === 0) {
+        console.log(`Inner if`, filter[name]);
+        delete filter[name];
+      }
+    }
+
+    console.log(`filter`, filter);
+    let filteredData = applyFilter(data, filter);
+
+    setFilter(filter);
+    setFiltered(filteredData);
   };
 
-  // setState(obj);
+  const applyFilter = (arr, filter) => {
+    const keys = Object.keys(filter);
+    return arr.filter((val) => {
+      return keys.every((k) => {
+        if (!filter[k].length) return true;
+        return filter[k].includes(val[k]);
+      });
+    });
+  };
+
+  useEffect(() => {
+    setData(db);
+  }, []);
 
   return (
     <div className="row">
-      {Object.values(obj).map((val, ind) => (
-        <>
-          <div>
-            {keys[ind] !== "id" && keys[ind] !== "name" && keys[ind]}
-            {keys[ind] !== "id" &&
-              val.map((vals) => (
-                <>
-                  {vals && keys[ind] !== "name" && (
-                    <label>
-                      <input
-                        type="checkbox"
-                        name={keys[ind]}
-                        value={vals}
-                        onChange={(e) => handleCheckChange(e)}
-                      />
-                      {vals}
-                    </label>
-                  )}
-                </>
-              ))}
-            {keys[ind] === "name" && (
-              <input
-                type="search"
-                name={keys[ind]}
-                placeholder="Search name"
-                onChange={(e) => handleSearchChange(e)}
-              />
-            )}
-          </div>
-        </>
-      ))}
+      {obj &&
+        Object.values(obj).map((val, ind) => (
+          <>
+            <div>
+              {keys[ind] !== "id" && keys[ind] !== "name" && keys[ind]}
+              {keys[ind] !== "id" &&
+                val.map((vals) => (
+                  <>
+                    {vals && keys[ind] !== "name" && (
+                      <label>
+                        <input
+                          type="checkbox"
+                          name={keys[ind]}
+                          value={vals}
+                          onChange={(e) => handleFilter(e)}
+                        />
+                        {vals}
+                      </label>
+                    )}
+                  </>
+                ))}
+              {keys[ind] === "name" && (
+                <input
+                  type="search"
+                  name={keys[ind]}
+                  placeholder="Search name"
+                  onChange={(e) => handleFilter(e)}
+                />
+              )}
+            </div>
+          </>
+        ))}
 
       <table>
         <thead>
           <tr>{keys && keys.map((val, ind) => <th>{val}</th>)}</tr>
         </thead>
         <tbody>
-          {obj &&
-            Object.values(db).map((val, ind) => (
+          {data &&
+            !filtered &&
+            Object.values(data).map((val, ind) => (
+              <tr>
+                {Object.values(val).map((vals, index) => (
+                  <td>{vals}</td>
+                ))}
+              </tr>
+            ))}
+          {filtered &&
+            Object.values(filtered).map((val, ind) => (
               <tr>
                 {Object.values(val).map((vals, index) => (
                   <td>{vals}</td>
