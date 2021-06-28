@@ -6,34 +6,50 @@ import db from "../db.json";
 const Main = () => {
   const [data, setData] = useState();
   const [filtered, setFiltered] = useState();
-  const [filterOptions, setFilter] = useState({});
-  let keys = [];
+  const [filterOptions, setFilterOptions] = useState({});
+  const [keys, setKeys] = useState([]);
+  const [stateObj, setStateObj] = useState();
+  // let filter;
+  let obj;
 
-  if (data) {
-    data.forEach((val) => {
-      Object.keys(val).filter((v, i, ar) => {
-        if (ar.indexOf(v) === i) {
-          keys.push(v);
-        }
+  useEffect(() => {
+    console.log(`first`);
+    setData(db);
+  }, []);
+
+  useEffect(() => {
+    let kys = [];
+    if (data) {
+      data.forEach((val) => {
+        Object.keys(val).filter((v, i, ar) => {
+          if (ar.indexOf(v) === i) {
+            kys.push(v);
+            // setKeys((old) => [...old, v]);
+          }
+        });
+      });
+    }
+
+    let unique = kys.filter((v, i, ar) => ar.indexOf(v) === i);
+
+    setKeys(unique);
+    // filter = filterOptions;
+  }, [data]);
+
+  useEffect(() => {
+    keys.forEach((val, ind) => {
+      let tmp = [];
+      data.forEach((dVal) => {
+        tmp.push(dVal[val]);
+        obj = {
+          ...obj,
+          [keys[ind]]: tmp.filter((v, i, ar) => ar.indexOf(v) === i),
+        };
       });
     });
-  }
 
-  keys = keys.filter((v, i, ar) => ar.indexOf(v) === i);
-
-  let obj;
-  keys.forEach((val, ind) => {
-    let tmp = [];
-    db.forEach((dVal) => {
-      tmp.push(dVal[val]);
-      obj = {
-        ...obj,
-        [keys[ind]]: tmp.filter((v, i, ar) => ar.indexOf(v) === i),
-      };
-    });
-  });
-
-  let filter = filterOptions;
+    setStateObj(obj);
+  }, [keys]);
 
   /* const handleCheckChange = (e) => {
     const { name, value, checked } = e.target;
@@ -109,39 +125,40 @@ const Main = () => {
 
   const handleFilter = (e) => {
     const { name, value, checked } = e.target;
-    if (Object.keys(filter).length !== 0) {
-      if (!filter[name]) {
-        filter = {
-          ...filter,
+    let tmpObj = filterOptions;
+
+    if (checked) {
+      // Code for checkbox check
+      if (!tmpObj[name]) {
+        tmpObj = {
+          ...tmpObj,
           [name]: [value],
         };
-        console.log(`IF IF`);
       } else {
-        filter[name].push(value);
-        console.log(`ELSE IF`);
+        tmpObj[name].push(value);
       }
     } else {
-      filter = {
-        [name]: [value],
-      };
-      console.log(`ELSE`, filter);
-    }
-    if (!checked || value === "") {
-      filter = {
-        ...filter,
-        [name]: filter[name].filter((v) => v !== value),
-      };
+      // Code for filtering using name.
+      if (name === "name") {
+        tmpObj = {
+          ...tmpObj,
+          [name]: [value],
+        };
+      } else {
+        tmpObj = {
+          ...tmpObj,
+          [name]: tmpObj[name].filter((v) => v !== value),
+        };
+      }
 
-      if (filter[name].length === 0) {
-        console.log(`Inner if`, filter[name]);
-        delete filter[name];
+      if (tmpObj[name].length === 0 || tmpObj.name?.[0] == "") {
+        delete tmpObj[name];
       }
     }
 
-    console.log(`filter`, filter);
-    let filteredData = applyFilter(data, filter);
+    let filteredData = applyFilter(data, tmpObj);
 
-    setFilter(filter);
+    setFilterOptions(tmpObj);
     setFiltered(filteredData);
   };
 
@@ -150,19 +167,16 @@ const Main = () => {
     return arr.filter((val) => {
       return keys.every((k) => {
         if (!filter[k].length) return true;
+        if (k === "name") return val[k].includes(filter[k]);
         return filter[k].includes(val[k]);
       });
     });
   };
 
-  useEffect(() => {
-    setData(db);
-  }, []);
-
   return (
     <div className="row">
-      {obj &&
-        Object.values(obj).map((val, ind) => (
+      {stateObj &&
+        Object.values(stateObj).map((val, ind) => (
           <>
             <div>
               {keys[ind] !== "id" && keys[ind] !== "name" && keys[ind]}

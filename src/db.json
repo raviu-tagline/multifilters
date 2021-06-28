@@ -29,6 +29,16 @@
         "city": "denver",
         "category": "two",
         "type": "C",
-        "active": "FALSE"
+        "active": "FALSE",
+        "landmark": "Varachha"
+    },
+    {
+        "id": 5,
+        "name": "january",
+        "city": "ny",
+        "category": "four",
+        "type": "C",
+        "active": "FALSE",
+        "landmark": "Varachha"
     }
 ]
