@@ -9,7 +9,7 @@ const Main = () => {
   const [filterOptions, setFilterOptions] = useState({});
   const [keys, setKeys] = useState([]);
   const [stateObj, setStateObj] = useState();
-  let obj;
+  let obj, name;
 
   useEffect(() => {
     let kys = [];
@@ -47,6 +47,7 @@ const Main = () => {
 
     if (checked) {
       // Code for checkbox check
+
       if (!tmpObj[name]) {
         tmpObj = {
           ...tmpObj,
@@ -57,6 +58,7 @@ const Main = () => {
       }
     } else {
       // Code for filtering using name.
+
       if (name === "name") {
         tmpObj = {
           ...tmpObj,
@@ -74,7 +76,18 @@ const Main = () => {
       }
     }
 
-    let filteredData = applyFilter(data, tmpObj);
+    let filteredData = applyFilter(data, tmpObj); // In this we toggle filter i.e. we get data back when we check/ uncheck
+
+    // In below code previous data are not get back when we check/ uncheck
+
+    /* let filteredData;
+
+    console.log(`filtered`, filtered);
+    if (!filtered) {
+      filteredData = applyFilter(data, tmpObj);
+    } else {
+      filteredData = applyFilter(filtered, tmpObj);
+    } */
 
     setFilterOptions(tmpObj);
     setFiltered(filteredData);
@@ -135,19 +148,33 @@ const Main = () => {
             !filtered &&
             Object.values(data).map((val, ind) => (
               <tr>
-                {Object.values(val).map((vals, index) => (
-                  <td>{vals}</td>
-                ))}
+                {Object.values(val).map((vals, index) =>
+                  keys[index] === "id" ? <td>{ind + 1}</td> : <td>{vals}</td>
+                )}
               </tr>
             ))}
+
+          {/* // ***** Code repeating here ***** // */}
+
           {filtered &&
             Object.values(filtered).map((val, ind) => (
               <tr>
-                {Object.values(val).map((vals, index) => (
-                  <td>{vals}</td>
-                ))}
+                {Object.values(val).map((vals, index) =>
+                  keys[index] === "id" ? <td>{ind + 1}</td> : <td>{vals}</td>
+                )}
               </tr>
             ))}
+
+          {/* {console.log(`object`, Object.values(data ?? filtered))} */}
+          {/* {console.log(`name`, name)}
+          {name &&
+            name.map((val, ind) => (
+              <tr>
+                {Object.values(val).map((vals, index) =>
+                  keys[index] === "id" ? <td>{ind + 1}</td> : <td>{vals}</td>
+                )}
+              </tr>
+            ))} */}
         </tbody>
       </table>
     </div>

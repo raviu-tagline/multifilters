@@ -5,7 +5,8 @@
         "city": "dallas",
         "category": "one",
         "type": "A",
-        "active": "FALSE"
+        "active": "FALSE",
+        "landmark": "jpn"
     },
     {
         "id": 2,
@@ -13,8 +14,7 @@
         "city": "dallas",
         "category": "three",
         "type": "B",
-        "active": "FALSE",
-        "landmark": "surat"
+        "active": "FALSE"
     },
     {
         "id": 3,
@@ -22,8 +22,7 @@
         "city": "san francisco",
         "category": "one",
         "type": "B",
-        "active": "TRUE",
-        "landmark": "Varachha"
+        "active": "TRUE"
     },
     {
         "id": 4,
@@ -32,7 +31,7 @@
         "category": "two",
         "type": "C",
         "active": "FALSE",
-        "landmark": "Varachha"
+        "landmark": "varachha"
     },
     {
         "id": 5,
@@ -40,7 +39,7 @@
         "city": "ny",
         "category": "two",
         "type": "C",
-        "active": "FALSE",
-        "landmark": "surat"
+        "active": "TRUE",
+        "landmark": "varachha"
     }
 ]
