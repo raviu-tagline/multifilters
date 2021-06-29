@@ -13,7 +13,8 @@
         "city": "dallas",
         "category": "three",
         "type": "B",
-        "active": "FALSE"
+        "active": "FALSE",
+        "landmark": "surat"
     },
     {
         "id": 3,
@@ -21,7 +22,8 @@
         "city": "san francisco",
         "category": "one",
         "type": "B",
-        "active": "TRUE"
+        "active": "TRUE",
+        "landmark": "Varachha"
     },
     {
         "id": 4,
@@ -36,9 +38,9 @@
         "id": 5,
         "name": "january",
         "city": "ny",
-        "category": "four",
+        "category": "two",
         "type": "C",
         "active": "FALSE",
-        "landmark": "Varachha"
+        "landmark": "surat"
     }
 ]

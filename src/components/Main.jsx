@@ -9,22 +9,15 @@ const Main = () => {
   const [filterOptions, setFilterOptions] = useState({});
   const [keys, setKeys] = useState([]);
   const [stateObj, setStateObj] = useState();
-  // let filter;
   let obj;
 
   useEffect(() => {
-    console.log(`first`);
-    setData(db);
-  }, []);
-
-  useEffect(() => {
     let kys = [];
-    if (data) {
-      data.forEach((val) => {
+    if (db) {
+      db.forEach((val) => {
         Object.keys(val).filter((v, i, ar) => {
           if (ar.indexOf(v) === i) {
             kys.push(v);
-            // setKeys((old) => [...old, v]);
           }
         });
       });
@@ -32,96 +25,21 @@ const Main = () => {
 
     let unique = kys.filter((v, i, ar) => ar.indexOf(v) === i);
 
-    setKeys(unique);
-    // filter = filterOptions;
-  }, [data]);
-
-  useEffect(() => {
-    keys.forEach((val, ind) => {
+    unique.forEach((val, ind) => {
       let tmp = [];
-      data.forEach((dVal) => {
+      db.forEach((dVal) => {
         tmp.push(dVal[val]);
         obj = {
           ...obj,
-          [keys[ind]]: tmp.filter((v, i, ar) => ar.indexOf(v) === i),
+          [unique[ind]]: tmp.filter((v, i, ar) => ar.indexOf(v) === i),
         };
       });
     });
 
+    setData(db);
+    setKeys(unique);
     setStateObj(obj);
-  }, [keys]);
-
-  /* const handleCheckChange = (e) => {
-    const { name, value, checked } = e.target;
-
-    if (checked) {
-      if (Object.keys(filter).length !== 0) {
-        if (!filter[name]) {
-          filter = {
-            ...filter,
-            [name]: [value],
-          };
-        } else {
-          filter[name].push(value);
-        }
-      } else {
-        filter = {
-          [name]: [value],
-        };
-      }
-    } else {
-      filter = {
-        ...filter,
-        [name]: filter[name].filter((v) => v !== value),
-      };
-
-      if (filter[name].length === 0) {
-        delete filter[name];
-      }
-    }
-
-    let filteredData = applyFilter(data, filter);
-    // let filteredData;
-
-    // console.log(`filter`, filter, data);
-
-    // if (!filtered) {
-    //   filteredData = applyFilter(data, filter);
-    // } else {
-    //   filteredData = applyFilter(filtered, filter);
-    // }
-    setFilter(filter);
-    setFiltered(filteredData);
-  }; */
-
-  /* const handleSearchChange = (e) => {
-    const { name, value } = e.target;
-    console.log(`value`, value, `name`);
-    let fltr = {
-      [name]: [value],
-    };
-    let tt;
-    // console.log(`tt`, tt);
-
-    // console.log(`fltr`, fltr);
-    if (!filtered) {
-      tt = data.filter((v) => v[name].includes(value));
-      // tt = applyFilter(data, fltr);
-      // console.log(`tt in if`, tt);
-    } else {
-      // console.log(`else`);
-      tt = data.filter((v) => v[name].includes(value));
-      // tt = applyFilter(filtered, fltr);
-      // console.log(`tt in else`, tt);
-    }
-
-    console.log(`tt before set`, tt);
-    // console.log(`tt`, tt);
-    // let tt = applyFilter(data, fltr);
-    setFiltered(tt);
-
-    // setFiltered(...filtered, tt);
-  }; */
+  }, []);
 
   const handleFilter = (e) => {
     const { name, value, checked } = e.target;
